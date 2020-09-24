@@ -182,7 +182,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        skewness(col(column)).alias("skewness"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros')
-                                                       df_sum((col('RX_PRD_ID') == 0.0).cast('int')).alias('n_zeros'),
+                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
         else:
             stats_df = df.select(column).na.drop().agg(mean(col(column)).alias("mean"),
@@ -190,7 +190,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        df_max(col(column)).alias("max"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros'),
-                                                       df_sum((col('RX_PRD_ID') == 0.0).cast('int')).alias('n_zeros'),
+                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
             stats_df["variance"] = df.select(column).na.drop().agg(variance_custom(col(column),
                                                                                    stats_df["mean"].iloc[0],
@@ -253,7 +253,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        skewness(col(column)).alias("skewness"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros')
-                                                       df_sum((col('RX_PRD_ID') == 0.0).cast('int')).alias('n_zeros'),
+                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
         else:
             stats_df = df.select(column).na.drop().agg(mean(col(column)).alias("mean"),
@@ -261,7 +261,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        df_max(col(column)).alias("max"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros')
-                                                       df_sum((col('RX_PRD_ID') == 0.0).cast('int')).alias('n_zeros'),
+                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
             stats_df["variance"] = df.select(column).na.drop().agg(variance_custom(col(column),
                                                                                    stats_df["mean"].iloc[0],
