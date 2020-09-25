@@ -220,6 +220,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                         .agg(df_sum(col("delta"))).toPandas().iloc[0,0] / float(current_result["count"]))
         stats["type"] = "NUM"
         stats['p_zeros'] = 0.15 # stats['n_zeros'] / float(nrows)
+        print("using fixed p_zeros")
 
         # Large histogram
         imgdata = BytesIO()
@@ -291,6 +292,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                         .agg(df_sum(col("delta"))).toPandas().iloc[0,0] / float(current_result["count"]))
         stats["type"] = "NUM"
         stats['p_zeros'] = 0.15 # stats['n_zeros'] / float(nrows)
+        print("using fixed p_zeros")
 
         # Large histogram
         imgdata = BytesIO()
