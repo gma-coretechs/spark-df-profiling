@@ -182,15 +182,13 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        skewness(col(column)).alias("skewness"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros')
-                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
         else:
             stats_df = df.select(column).na.drop().agg(mean(col(column)).alias("mean"),
                                                        df_min(col(column)).alias("min"),
                                                        df_max(col(column)).alias("max"),
                                                        df_sum(col(column)).alias("sum"),
-                                                       # count(col(column) == 0.0).alias('n_zeros'),
-                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
+                                                       # count(col(column) == 0.0).alias('n_zeros')
                                                        ).toPandas()
             stats_df["variance"] = df.select(column).na.drop().agg(variance_custom(col(column),
                                                                                    stats_df["mean"].iloc[0],
@@ -219,8 +217,10 @@ def describe(df, bins, corr_reject, config, **kwargs):
                         .select(df_abs(col(column)-stats["mean"]).alias("delta"))
                         .agg(df_sum(col("delta"))).toPandas().iloc[0,0] / float(current_result["count"]))
         stats["type"] = "NUM"
-        stats['p_zeros'] = 0.15 # stats['n_zeros'] / float(nrows)
-        print("using fixed p_zeros")
+
+        print('using old n_zero calc')
+        stats['n_zeros'] = df.select(column).where(col(column)==0.0).count()
+        stats['p_zeros'] = stats['n_zeros'] / float(nrows)
 
         # Large histogram
         imgdata = BytesIO()
@@ -254,7 +254,6 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        skewness(col(column)).alias("skewness"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros')
-                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
         else:
             stats_df = df.select(column).na.drop().agg(mean(col(column)).alias("mean"),
@@ -262,7 +261,6 @@ def describe(df, bins, corr_reject, config, **kwargs):
                                                        df_max(col(column)).alias("max"),
                                                        df_sum(col(column)).alias("sum"),
                                                        # count(col(column) == 0.0).alias('n_zeros')
-                                                       df_sum((col(column) == 0.0).cast('int')).alias('n_zeros'),
                                                        ).toPandas()
             stats_df["variance"] = df.select(column).na.drop().agg(variance_custom(col(column),
                                                                                    stats_df["mean"].iloc[0],
@@ -291,8 +289,10 @@ def describe(df, bins, corr_reject, config, **kwargs):
                         .select(df_abs(col(column)-stats["mean"]).alias("delta"))
                         .agg(df_sum(col("delta"))).toPandas().iloc[0,0] / float(current_result["count"]))
         stats["type"] = "NUM"
-        stats['p_zeros'] = 0.15 # stats['n_zeros'] / float(nrows)
-        print("using fixed p_zeros")
+
+        print('using old n_zero calc')
+        stats['n_zeros'] = df.select(column).where(col(column)==0.0).count()
+        stats['p_zeros'] = stats['n_zeros'] / float(nrows)
 
         # Large histogram
         imgdata = BytesIO()
