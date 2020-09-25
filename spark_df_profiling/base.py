@@ -219,7 +219,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                         .select(df_abs(col(column)-stats["mean"]).alias("delta"))
                         .agg(df_sum(col("delta"))).toPandas().iloc[0,0] / float(current_result["count"]))
         stats["type"] = "NUM"
-        stats['p_zeros'] = float(1.5) # stats['n_zeros'] / float(nrows)
+        stats['p_zeros'] = 0.15 # stats['n_zeros'] / float(nrows)
 
         # Large histogram
         imgdata = BytesIO()
@@ -290,7 +290,7 @@ def describe(df, bins, corr_reject, config, **kwargs):
                         .select(df_abs(col(column)-stats["mean"]).alias("delta"))
                         .agg(df_sum(col("delta"))).toPandas().iloc[0,0] / float(current_result["count"]))
         stats["type"] = "NUM"
-        stats['p_zeros'] = stats['n_zeros'] / float(nrows)
+        stats['p_zeros'] = 0.15 # stats['n_zeros'] / float(nrows)
 
         # Large histogram
         imgdata = BytesIO()
